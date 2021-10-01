@@ -1,0 +1,42 @@
+---
+title: "Example RMarkdown Document"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE) #We tell R to display code by default
+```
+
+
+## Code Fragment
+
+We can embed pieces of R code as follows:
+```{r building a function and a data frame}
+
+# First we create a simple function
+f <- function(z) {
+  return(5*z^2+z+cos(15*z)+0.3*sin(300*z))
+}
+
+# We randomly generate some x
+x<-runif(100)
+# We set y to be f applied to x
+y<-f(x)
+
+# We then put x and y together in a data frame
+df<-data.frame(x,y)
+
+```
+
+
+## Embedded ploy
+
+We can also embed plots. By using `echo= FALSE` we display only the output and not the code.
+
+```{r, echo=FALSE}
+
+# A simple plot
+plot(x,y)
+```
+
+
