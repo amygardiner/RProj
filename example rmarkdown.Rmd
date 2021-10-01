@@ -29,7 +29,7 @@ df<-data.frame(x,y)
 ```
 
 
-## Embedded ploy
+## Embedded plot
 
 We can also embed plots. By using `echo= FALSE` we display only the output and not the code.
 
