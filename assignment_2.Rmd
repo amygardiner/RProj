@@ -60,3 +60,16 @@ ggplot(data=hawksSmall,aes(x=Tail,color=Species))+geom_density()+xlab("Tail(mm)"
 
 ggplot(data=hawksSmall,aes(x=Tail,y=Species,fill=Species))+geom_violin()+xlab("Tail(mm)")
 ```
+
+Presenting this data in scatter form:
+
+```{r, echo=FALSE}
+tails_scatter<-ggplot(data=hawksSmall,aes(y=Weight,x=Tail))+xlab("Tail(mm)")+ylab("Weight(gm)")
+tails_scatter+geom_point(aes(color=Species,shape=Species))
+```
+
+...and separating into species-specific facets:
+
+```{r, echo=FALSE}
+tails_scatter+geom_point(aes(color=Species))+geom_smooth(method="lm")+facet_wrap(~Species)
+```
