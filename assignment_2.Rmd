@@ -1,0 +1,62 @@
+---
+title: "assignment_2"
+author: "Amy Gardiner"
+date: "07/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, echo=FALSE}
+library(tidyverse)
+library(Stat2Data)
+data("Hawks")
+hawksSmall<-drop_na(select(Hawks,Age,Day,Month,Year,CaptureTime,Species,Wing,Weight,Tail))
+```
+
+The number of rows and columns within `hawksSmall` are:
+```{r, echo=FALSE}
+dim(hawksSmall)
+```
+
+Some of the first rows of `hawksSmall` are:
+```{r, echo=FALSE}
+head(hawksSmall)
+```
+
+A histogram plot of the wing length data:
+
+
+```{r, echo=FALSE}
+hawkplot<-ggplot(data=hawksSmall,aes(x=Weight))+xlab("Weight(gm)")
+hawkplot+geom_histogram(binwidth=100)+ylab("Count")
+```
+
+A density plot of the tail length data:
+
+```{r, echo=FALSE}
+hawkplot<-ggplot(data=hawksSmall,aes(x=Tail))+xlab("Tail(mm)")
+hawkplot+geom_density()+ylab("Density")
+```
+
+This data with `adjust=0.5` and `adjust=1` :
+(adjust = A multiplicate bandwidth adjustment. This makes it possible to adjust the bandwidth while still using the a bandwidth estimator. For example, adjust = 1/2 means use half of the default bandwidth.)
+
+```{r, echo=FALSE}
+hawkplot<-ggplot(data=hawksSmall,aes(x=Tail))+xlab("Tail(mm)")
+hawkplot+geom_density(adjust=0.5)+ylab("Density")
+
+hawkplot<-ggplot(data=hawksSmall,aes(x=Tail))+xlab("Tail(mm)")
+hawkplot+geom_density(adjust=1)+ylab("Density")
+```
+
+Tail lengths between species in density and violin form:
+
+```{r, echo=FALSE}
+ggplot(data=hawksSmall,aes(x=Tail,color=Species))+geom_density()+xlab("Tail(mm)")+ylab("Density")
+
+ggplot(data=hawksSmall,aes(x=Tail,y=Species,fill=Species))+geom_violin()+xlab("Tail(mm)")
+```
