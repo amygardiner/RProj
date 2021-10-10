@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
+## Visualisation
 ```{r, echo=FALSE}
 library(tidyverse)
 library(Stat2Data)
@@ -72,4 +72,15 @@ tails_scatter+geom_point(aes(color=Species,shape=Species))
 
 ```{r, echo=FALSE}
 tails_scatter+geom_point(aes(color=Species))+geom_smooth(method="lm")+facet_wrap(~Species)
+```
+
+## Data Wrangling
+
+hSF data frames:
+
+
+```{r, echo=FALSE}
+hSF<-select(filter(Hawks,Species=="RT",Weight>=1000),Wing,Weight,Tail)
+head(hSF)
+hSF%>%arrange(Wing)
 ```
