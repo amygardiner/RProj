@@ -98,3 +98,13 @@ hawksFullName<-select(left_join(capitalised,Hawks, by="Species"),-Species)
 head(hawksFullName)
 head(select(hawksFullName,species_name,Wing,Weight))
 ```
+
+The mutate function
+
+```{r,echo=FALSE}
+hawksWithBMI<-select(Hawks,Species,Weight,Wing)
+hawksWithBMI<-mutate(hawksWithBMI,bird_BMI=1000*Weight/(Wing)**2)
+hawksWithBMI<-select(hawksWithBMI,Species,bird_BMI)
+head(arrange(hawksWithBMI,desc(bird_BMI)))
+```
+
