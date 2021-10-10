@@ -96,4 +96,5 @@ species_names_df
 capitalised<-rename(species_names_df,Species=species)
 hawksFullName<-select(left_join(capitalised,Hawks, by="Species"),-Species)
 head(hawksFullName)
+head(select(hawksFullName,species_name,Wing,Weight))
 ```
