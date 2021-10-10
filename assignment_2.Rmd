@@ -93,7 +93,7 @@ species<-unique(Hawks$Species)
 species_name<-c("Red-tailed","Cooper's","Sharp-shinned")
 species_names_df<-data.frame(species,species_name)
 species_names_df
-hawksFullName<-rename(species_names_df,Species=species)
-left_join(hawksFullName,Hawks, by="Species",select(-"Species"))
+capitalised<-rename(species_names_df,Species=species)
+hawksFullName<-left_join(capitalised,Hawks, by="Species")
 head(hawksFullName)
 ```
