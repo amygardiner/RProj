@@ -82,5 +82,6 @@ hSF data frames:
 ```{r, echo=FALSE}
 hSF<-select(filter(Hawks,Species=="RT",Weight>=1000),Wing,Weight,Tail)
 head(hSF)
-hSF%>%arrange(Wing)
+hSF<-arrange(hSF,Wing)
+head(hSF)
 ```
