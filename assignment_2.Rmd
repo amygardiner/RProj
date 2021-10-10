@@ -58,7 +58,6 @@ Tail lengths between species in density and violin form:
 ```{r, echo=FALSE}
 ggplot(data=hawksSmall,aes(x=Tail,color=Species))+geom_density()+xlab("Tail(mm)")+ylab("Density")
 
-ggplot(data=hawksSmall,aes(x=Tail,y=Species,fill=Species))+geom_violin()+xlab("Tail(mm)")
 ```
 
 Presenting this data in scatter form:
@@ -102,9 +101,15 @@ head(select(hawksFullName,species_name,Wing,Weight))
 The mutate function
 
 ```{r,echo=FALSE}
-hawksWithBMI<-select(Hawks,Species,Weight,Wing)
-hawksWithBMI<-mutate(hawksWithBMI,bird_BMI=1000*Weight/(Wing)**2)
-hawksWithBMI<-select(hawksWithBMI,Species,bird_BMI)
-head(arrange(hawksWithBMI,desc(bird_BMI)))
+hawksWithBMI <- Hawks %>%
+  mutate(bird_BMI=1000*Weight/Wing^2) %>%
+  select(Species,bird_BMI) %>%
+  arrange(desc(bird_BMI))
+
+hawksWithBMI %>% head(8)
+hawksWithBMI <- hawksWithBMI %>%
+  filter(bird_BMI <100)
+
+ggplot(data=hawksWithBMI,aes(x=bird_BMI,y=Species,fill=Species))+geom_violin()+xlab("Bird BMI")+scale_x_continuous(trans='log2')
 ```
 
