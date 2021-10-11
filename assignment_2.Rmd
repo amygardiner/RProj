@@ -113,3 +113,23 @@ hawksWithBMI <- hawksWithBMI %>%
 ggplot(data=hawksWithBMI,aes(x=bird_BMI,y=Species,fill=Species))+geom_violin()+xlab("Bird BMI")+scale_x_continuous(trans='log2')
 ```
 
+Summarize and group-by functions
+
+```{r, echo=FALSE}
+hawksFullName %>%
+  group_by(species_name) %>%
+  summarize(num_rows=n(),mn_wing=mean(Wing,na.rm=1),md_wing=median(Wing,na.rm=1),t_mn_wing=mean(Wing,na.rm=1,trim=0.1),tail_wing_ratio=mean(Wing/Tail,na.rm=1))
+
+hawksFullName %>%
+  select(species_name,Wing,Weight,Culmen,Hallux,Tail,StandardTail,Tarsus,Crop) %>%
+  group_by(species_name) %>%
+  summarize(across(everything(),~sum(is.na(.x)))) %>%
+  head()
+```
+
+## Exploratory data analysis
+
+
+
+
+
