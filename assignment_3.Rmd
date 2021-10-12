@@ -56,5 +56,24 @@ df_xy_missing%>%
   mutate(z=map2_dbl(row_number(y),y,sometimes_missing)) %>%
   rename(y=z) %>%
   head(10)
+
+df_xy_impute<-data.frame(x,y=impute_by_median(map2_dbl(row_number(y),y,sometimes_missing)))
+df_xy_impute%>%
+  head(10)
+
+df_xy<-df_xy%>%
+  mutate(source="original")
+
+df_xy_missing<-df_xy_missing%>%
+  mutate(source="corrupted")
+
+df_xy_impute<-df_xy_impute%>%
+  mutate(source="imputed")
+
+df_combined<-rbind(df_xy,df_xy_missing,df_xy_impute)
+
+ggplot(df_combined,aes(x=x,y=y,color=source))+geom_point()+facet_wrap(~source)+geom_smooth(method="lm")
 ```
+
+
 
