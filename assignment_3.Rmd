@@ -82,9 +82,6 @@ library(readxl)
 file_name<-"HockeyLeague.xlsx"
 #file_path<-paste(folder_path,file_name,sep="")
 wins_data_frame<-read_excel(file_name,sheet="Wins")
-wins_data_frame %>%
-  select(1:5) %>%
-  head(3)
 
 years<-seq(1990,2020,1)
 years<-c(as.character(years))
@@ -101,12 +98,18 @@ losses_data_frame<-read_excel(file_name,sheet="Losses")
 losses_tidy<-losses_data_frame %>%
   pivot_longer(cols=(all_of(years)),names_to="Year",values_to="Values") %>%
   separate(Values,into=c("Losses","Total"),sep=" of ", convert=TRUE) %>%
-  rename(Team=...1) %>%
-  head(5)
+  rename(Team=...1)
+```
+Dimensions of losses_tidy:
+```{r,echo=FALSE}
+dim(losses_tidy)
 
 hockey_df<-inner_join(wins_tidy,losses_tidy, by=c("Team","Year","Total"))
-hockey_df %>% mutate(Draws=Total-Wins-Losses,Wins_rt=Wins/Total,Losses_rt=Losses/Total,Draws_rt=Draws/Total)
-
+hockey_df<-hockey_df %>%
+  mutate(Draws=Total-Wins-Losses,Wins_rt=Wins/Total,Losses_rt=Losses/Total,Draws_rt=Draws/Total)
+hockey_summary<- hockey_df %>%
+  group_by(Team) %>%
+  summarise(across(c("Wins","Losses","Draws"), list(mean=~mean(.x,na.rm=1), med=~median(.x,na.rm=1)))) %>%
+  arrange(desc("Wins_med"))
+hockey_summary
 ```
-
-
