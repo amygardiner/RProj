@@ -75,5 +75,38 @@ df_combined<-rbind(df_xy,df_xy_missing,df_xy_impute)
 ggplot(df_combined,aes(x=x,y=y,color=source))+geom_point()+facet_wrap(~source)+geom_smooth(method="lm")
 ```
 
+Using the readxl library
+```{r,echo=FALSE}
+library(readxl)
+#folder_path<-""   already within this directory
+file_name<-"HockeyLeague.xlsx"
+#file_path<-paste(folder_path,file_name,sep="")
+wins_data_frame<-read_excel(file_name,sheet="Wins")
+wins_data_frame %>%
+  select(1:5) %>%
+  head(3)
+
+years<-seq(1990,2020,1)
+years<-c(as.character(years))
+
+wins_tidy<-wins_data_frame %>%
+  pivot_longer(cols=(all_of(years)),names_to="Year",values_to="Values") %>%
+  separate(Values,into=c("Wins","Total"),sep=" of ", convert=TRUE) %>%
+  rename(Team=...1)
+
+dim(wins_tidy)
+head(wins_tidy,5)
+
+losses_data_frame<-read_excel(file_name,sheet="Losses")
+losses_tidy<-losses_data_frame %>%
+  pivot_longer(cols=(all_of(years)),names_to="Year",values_to="Values") %>%
+  separate(Values,into=c("Losses","Total"),sep=" of ", convert=TRUE) %>%
+  rename(Team=...1) %>%
+  head(5)
+
+hockey_df<-inner_join(wins_tidy,losses_tidy, by=c("Team","Year","Total"))
+hockey_df %>% mutate(Draws=Total-Wins-Losses,Wins_rt=Wins/Total,Losses_rt=Losses/Total,Draws_rt=Draws/Total)
+
+```
 
 
