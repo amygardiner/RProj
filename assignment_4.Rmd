@@ -1,0 +1,25 @@
+---
+title: "Assignment 4"
+author: "Amy Gardiner"
+date: "18/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. Bayes Theorem 
+
+Let A be the event that it rains next week and B the event that the weather forecaster predicts that there will be rain next week. Let's suppose that the probability of rain next week is P(A)=0.9. Suppose also that the conditional probability that there is a forecast of rain, given that it really does rain, is P(B|A)=0.8. On the other hand, the conditional probability that there is a forecast of dry weather, given that there really isn't any rain is P(B_c|A_c)=0.75. 
+
+Now suppose that there is a forecast of rain. What is the conditional probability of rain, given the forecast of rain, P(A|B)?
+
+- P(A)=0.9
+- P(B|A)=0.8
+- P(B_c|A_c)=0.75
+
+First compute P(B) = P(B^A) + P(B^A_c) 
+                   = P(B|A) . P(A) + P(B|A_c) . P(A_c)
+                   = P(B|A) . P(A) + (1-P(B_c|A_c) ) . (1-P(A))
+                   = 0.8 . 0.9 + (1-0.75) . (1-0.9) = 0.745
