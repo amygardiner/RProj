@@ -7,6 +7,9 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(dplyr) 
+library(ggplot2)
+library(tidyverse)
 ```
 
 ## 1. Bayes Theorem 
@@ -23,3 +26,117 @@ First compute P(B) = P(B^A) + P(B^A_c)
                    = P(B|A) . P(A) + P(B|A_c) . P(A_c)
                    = P(B|A) . P(A) + (1-P(B_c|A_c) ) . (1-P(A))
                    = 0.8 . 0.9 + (1-0.75) . (1-0.9) = 0.745
+
+## Conditional Probabilities
+
+1. P(A|B)=P(A^B)/P(B)
+
+## Sampling with replacement
+```{r}
+choose(8,3)
+```
+
+n balls per bag\
+r are red balls\
+(n-r) are blue balls\
+process of sampling with replacement repeated k times\
+want to know probability of z balls being red\
+A_z,k = event of z of k balls being red\
+
+P(A_z,k)= binomial(k z) x (r/n)^z x (1-(r/n))^(k-z)
+
+```{r}
+prob_red_spheres<-function(z){
+  n<-10
+  r<-3
+  k<-35
+  probability<-(choose(k,z)*((r/n)^z)*(1-(r/n))^(k-z))
+  return(probability)
+}
+
+prob_red_spheres(20)
+
+num_reds<-seq(1,35,1)
+prob<-prob_red_spheres(num_reds)
+
+prob_by_num_reds<-data.frame(num_reds,prob)
+
+prob_by_num_reds%>%head(3)
+
+ggplot(data=prob_by_num_reds)+xlab("Number of reds")+geom_line(aes(x=num_reds,y=prob))+ylab("Probability")
+
+sample(10,35,replace=TRUE)
+
+# Setting the random seed just once
+set.seed(0)
+
+for(i in 1:5){
+  
+  print(sample(100,5,replace=FALSE))
+  # The result may well differ every time
+}
+
+# Resetting the random seed every time
+
+for(i in 1:5){
+  set.seed(1)
+  print(sample(100,5,replace=FALSE))
+}
+```
+
+Simulation study using `sample()`
+```{r}
+num_trials<-1000 # set the number of trials
+set.seed(0) # set the random seed
+
+sampling_with_replacement_simulation<-data.frame(trial=1:num_trials)%>%
+  mutate(sample_balls=map(.x=trial,~sample(10,35,replace=TRUE)))
+# generate collection of num_trials simulations
+
+sampling_with_replacement_simulation<-sampling_with_replacement_simulation%>%
+  mutate(num_reds=map_dbl(.x=sample_balls,~sum(.x<=3)))
+
+num_reds_in_simulation<-sampling_with_replacement_simulation%>%
+  pull(num_reds)
+# extracts a vector corresponding to the number of reds in each trial
+
+prob_by_num_reds<-prob_by_num_reds%>%
+  mutate(simulation_count=map_dbl(.x=num_reds,~sum(num_reds_in_simulation==.x)))
+# adds a column which gives the number of trials with a given number of reds
+
+prob_by_num_reds<-prob_by_num_reds%>%
+  mutate(expected_count=num_trials*prob)
+# adds a column which gives the expected number of reds
+# based on the probability formula
+
+prob_by_num_reds%>%
+  rename(Simulation=simulation_count,Expected=expected_count)%>%
+  pivot_longer(cols=c("Simulation","Expected"),names_to="Type",values_to="count") %>%
+  ggplot(aes(num_reds,count)) + geom_line(aes(linetype=Type, color=Type)) + scale_linetype_manual(values = c("solid", "dashed")) + theme_bw() + xlab("Number of reds") + ylab("Count")
+```
+
+## Sampling without replacement
+
+```{r}
+set.seed(0)
+number_trials<-25
+number_reds<-50
+number_blues<-30
+number_greens<-20
+
+sampling_without_replacement_simulation<-data.frame(trial=1:number_trials)%>%
+  mutate(sample_balls=map(.x=trial,~sample(100,10,replace=FALSE)))
+
+sampling_without_replacement_simulation<-sampling_without_replacement_simulation%>%
+  mutate(number_reds=map_dbl(.x=sample_balls,~sum(.x<=50))) %>%
+  mutate(number_blues=map_dbl(.x=sample_balls,~sum(.x>50&&.x<=80))) %>%
+  mutate(number_greens=map_dbl(.x=sample_balls,~sum(.x>80&&.x<=100))) %>%
+  mutate(minimum_count=pmin(number_reds,number_blues,number_greens)) %>%
+  mutate(proportion_missing=map_dbl(.x=minimum_count,~sum(.x==0)))
+
+sampling_without_replacement_simulation
+
+```
+
+
+
