@@ -46,7 +46,6 @@ sample_X_015<-function(alpha,beta,n){
     (0<=U)&(U<alpha)~1,
     (alpha<=U)&(U<alpha+beta)~5,
     (alpha+beta<=U)&(U<=1)~0))%>%
- # mutate(sample_avg=map_dbl(.x=U,~mean(.x))) %>%
   pull(X) 
 }
 
@@ -54,6 +53,8 @@ test<-sample_X_015(0.5,0.1,100000)
 
 head(test,400)
 
+sample_avg<-mean(test)
+sample_avg
 ```
 
 
