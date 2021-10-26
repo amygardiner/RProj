@@ -57,4 +57,6 @@ sample_avg<-mean(test)
 sample_avg
 ```
 
+Comparing this with the expectation E = 1(0.5)+5(0.1) = 1 this shows the impact of the law of large numbers.
+
 
