@@ -59,4 +59,24 @@ sample_avg
 
 Comparing this with the expectation E = 1(0.5)+5(0.1) = 1 this shows the impact of the law of large numbers.
 
+Now use a range of beta values and compare the sample average:
+
+```{r}
+range<-seq(0,0.9,0.01)
+
+for(i in range){
+  sample<-sample_X_015(0.1,i,100)
+  sample_avg<-mean(sample)
+  vector<-c(vector,i)
+  # can i push back into a vector in R?
+  print(sample_avg)
+  #sample_averages_data<-data.frame(i,sample_avg)
+  
+}
+
+vector
+
+ggplot()+xlab("Value of Beta")+geom_line(aes(x=i,y=sample_avg))+ylab("Sample Average")
+  
+```
 
