@@ -1,0 +1,54 @@
+---
+title: "assignment_5"
+author: "Amy Gardiner"
+date: "26/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr) 
+library(ggplot2)
+library(tidyverse)
+```
+
+## Expectation and variance of a discrete random variable
+
+Suppose that α,β ∈ [0,1] with α+β ≤ 1 and let X be a discrete random variable with with distribution supported on {0, 1, 5}. Suppose that P (X = 1) = α and P (X = 5) = β and P (X ∈/ {0, 1, 5}) = 0.
+What is the probability mass function pX : S → [0,1] for X?
+
+pX = α if X=1\
+   = β if X=5\
+   = 1-α-β if X=0\
+   = 0 if X ∈/ {0, 1, 5}
+   
+The expectation is α + 5β
+
+The variance is sum(pX.(x-(α + 5β))^2) = β(5-(α + 5β))^2 + α (1-(α + 5β))^2) (can expand if necessary)
+
+## Simulating data with the uniform distribution
+
+```{r}
+set.seed(0)
+n<-1000
+sample_X<-data.frame(U=runif(n))%>%
+  mutate(X=case_when(
+    (0<=U)&(U<0.25)~1,
+    (0.25<=U)&(U<0.5)~5,
+    (0.5<=U)&(U<=1)~0))%>%
+pull(X)
+
+sample_X
+
+sample_X_015(alpha,beta,n)<-data.frame(U=runif(n))%>%
+  mutate(X=case_when(
+    (0<=U)&(U<alpha)~1,
+    (alpha<=U)&(U<alpha+beta)~5,
+    (alpha+beta<=U)&(U<=1)~0))%>%
+pull(X)
+
+sample_X_015(0.5,0.1,100000)
+
+```
+
+
