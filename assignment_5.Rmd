@@ -128,15 +128,15 @@ where $\alpha$ is the variance and $\beta$ is the mean
 
 ```{r}
 set.seed(1)
-standardGuassianSample<-c(rnorm(100))
-mean1Var3GaussianSampleA<-map_dbl(.x=standardGuassianSample,~.x*3+1)
+standardGaussianSample<-c(rnorm(100))
+mean1Var3GaussianSampleA<-map_dbl(.x=standardGaussianSample,~.x*3+1)
 
 set.seed(1)
-mean1Var3GuassianSampleB<-c(rnorm(100,1,3))
+mean1Var3GaussianSampleB<-c(rnorm(100,1,3))
 
-standardGuassianSample
+standardGaussianSample
 mean1Var3GaussianSampleA
-mean1Var3GuassianSampleB
+mean1Var3GaussianSampleB
 
 pop_plot<-dnorm(range,mean=1,sd=sqrt(3),log=FALSE)
 
@@ -167,4 +167,15 @@ norm_df<-norm_df%>%
 
 head(norm_df,3)
 ```
+
+Plot these two:
+
+```{r}
+colors<-c("Gaussian pdf"="red", "Binomial pmf"="blue")
+fill<-c("Gaussian pdf"="white", "Binomial pmf"="white")
+
+ggplot()+labs(x="x",y="Probability")+theme_bw()+geom_line(data=norm_df, aes(x,y=pdf,color="Gaussian pdf"),size=2)+geom_col(data=binom_df,aes(x=x,y=pmf,color="Binomial pmf",fill="Binomial pmf"))+scale_color_manual(name="",values=colors)+scale_fill_manual(name="",values=fill)+xlim(c(20,50))
+```
+
+
 
