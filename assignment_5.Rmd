@@ -142,9 +142,29 @@ pop_plot<-dnorm(range,mean=1,sd=sqrt(3),log=FALSE)
 
 kernal_plot<-ggplot()+geom_density(aes(x=mean1Var3GaussianSampleA),color="blue")+geom_line(aes(x=range,y=pop_plot,color="red"))+xlab("x")+ylab("Density")
 kernal_plot
-
 ```
 
+## The Binomial distribution and the central limit theorem
 
+```{r}
+set.seed(1)
+x<-seq(0,50,1)
+binom_df<-data.frame(x)
+binom_df<-binom_df%>%
+  mutate(pmf=dbinom(x,size=50,prob=0.7))
 
+head(binom_df,3)
+```
+
+For binomial distribution with n trials and success probability p, mean $\mu$=np and sd $\sigma$=sqrt(np*(1-p))
+
+```{r}
+set.seed(1)
+x<-seq(0,50,0.01)
+norm_df<-data.frame(x)
+norm_df<-norm_df%>%
+  mutate(pdf=dnorm(x,35,sqrt(35*0.3)))
+
+head(norm_df,3)
+```
 
