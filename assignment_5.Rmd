@@ -86,8 +86,8 @@ f~$\mu$,$\sigma$~(x) := $\frac{1}{ \sigma sqrt2\pi}$ * exp(-1/2*((x-$ \mu $)/$ \
 ```{r}
 range<-seq(-4,6,0.01)
 plot_1<-dnorm(range,mean=1,sd=1,log=FALSE)
-plot_2<-dnorm(range,mean=1,sd=2,log=FALSE)
-plot_3<-dnorm(range,mean=1,sd=3,log=FALSE)
+plot_2<-dnorm(range,mean=1,sd=sqrt(2),log=FALSE)
+plot_3<-dnorm(range,mean=1,sd=sqrt(3),log=FALSE)
 lp<-ggplot()+xlab("x")+geom_line(aes(x=range,y=plot_1,color="red",linetype='solid'))+geom_line(aes(x=range,y=plot_2,color="green",linetype='dashed'))+geom_line(aes(x=range,y=plot_3,color="blue",linetype='longdash'))+ylab("Density")
 
 lp + scale_color_manual(values=c("blue","green","red"),
@@ -99,8 +99,8 @@ Corresponding plot for the cumulative distribution function:
 
 ```{r}
 cplot_1<-pnorm(range,mean=1,sd=1,lower.tail=TRUE,log.p=FALSE)
-cplot_2<-pnorm(range,mean=1,sd=2,lower.tail=TRUE,log.p=FALSE)
-cplot_3<-pnorm(range,mean=1,sd=3,lower.tail=TRUE,log.p=FALSE)
+cplot_2<-pnorm(range,mean=1,sd=sqrt(2),lower.tail=TRUE,log.p=FALSE)
+cplot_3<-pnorm(range,mean=1,sd=sqrt(3),lower.tail=TRUE,log.p=FALSE)
 
 clp<-ggplot()+xlab("x")+geom_line(aes(x=range,y=cplot_1,color="red",linetype='solid'))+geom_line(aes(x=range,y=cplot_2,color="green",linetype='dashed'))+geom_line(aes(x=range,y=cplot_3,color="blue",linetype='longdash'))+ylab("Density")
 
@@ -113,9 +113,38 @@ The quantile function allows your to find the quantile (percentage) Q for any pr
 
 ```{r}
 qplot_1<-qnorm(cplot_1,mean=1,sd=1,lower.tail=TRUE,log.p=FALSE)
-qplot_2<-qnorm(cplot_1,mean=1,sd=2,lower.tail=TRUE,log.p=FALSE)
-qplot_3<-qnorm(cplot_1,mean=1,sd=3,lower.tail=TRUE,log.p=FALSE)
+qplot_2<-qnorm(cplot_1,mean=1,sd=sqrt(2),lower.tail=TRUE,log.p=FALSE)
+qplot_3<-qnorm(cplot_1,mean=1,sd=sqrt(3),lower.tail=TRUE,log.p=FALSE)
 
 ggplot()+geom_line(aes(x=cplot_1,y=qplot_1))+geom_line(aes(x=cplot_2,y=qplot_2))+geom_line(aes(x=cplot_3,y=qplot_3))+xlab("Probability p")+ylab("Q(p)")
 ```
+
+The rnorm function generates n observations from the Normal distribution with mean $\mu$ and variance $\sigma$^2. 
+
+Linear transformation from independent and identically distributed sequence Z~1~,...,Z~n~ where Z is normally distributed with mean, variance 0,1 to an i.i.d sample of form Y~1~,...,Y~n~ where Y has mean, variance 1,3 is such that:\
+
+Y~i~ = $\alpha$ * Z~i~ + $\beta$ \
+where $\alpha$ is the variance and $\beta$ is the mean
+
+```{r}
+set.seed(1)
+standardGuassianSample<-c(rnorm(100))
+mean1Var3GaussianSampleA<-map_dbl(.x=standardGuassianSample,~.x*3+1)
+
+set.seed(1)
+mean1Var3GuassianSampleB<-c(rnorm(100,1,3))
+
+standardGuassianSample
+mean1Var3GaussianSampleA
+mean1Var3GuassianSampleB
+
+pop_plot<-dnorm(range,mean=1,sd=sqrt(3),log=FALSE)
+
+kernal_plot<-ggplot()+geom_density(aes(x=mean1Var3GaussianSampleA),color="blue")+geom_line(aes(x=range,y=pop_plot,color="red"))+xlab("x")+ylab("Density")
+kernal_plot
+
+```
+
+
+
 
