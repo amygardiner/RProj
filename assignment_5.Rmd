@@ -95,3 +95,17 @@ lp + scale_colour_manual(values=c("red","green","blue"),
                        labels=c("1","2","3"))
 ```
 
+Corresponding plot for the cumulative distribution function:
+
+```{r}
+cplot_1<-pnorm(range,mean=1,sd=1,lower.tail=TRUE,log.p=FALSE)
+cplot_2<-pnorm(range,mean=1,sd=2,lower.tail=TRUE,log.p=FALSE)
+cplot_3<-pnorm(range,mean=1,sd=3,lower.tail=TRUE,log.p=FALSE)
+
+clp<-ggplot()+xlab("x")+geom_line(aes(x=range,y=cplot_1,color="red",linetype='solid'))+geom_line(aes(x=range,y=cplot_2,color="green",linetype='dashed'))+geom_line(aes(x=range,y=cplot_3,color="blue",linetype='longdash'))+ylab("Density")
+
+clp + scale_colour_manual(values=c("red","green","blue"),
+                       name="Variance",
+                       labels=c("1","2","3"))
+```
+
