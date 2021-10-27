@@ -88,6 +88,10 @@ range<-seq(-4,6,0.01)
 plot_1<-dnorm(range,mean=1,sd=1,log=FALSE)
 plot_2<-dnorm(range,mean=1,sd=2,log=FALSE)
 plot_3<-dnorm(range,mean=1,sd=3,log=FALSE)
-ggplot()+xlab("x")+geom_line(aes(x=range,y=plot_1,color="red"))+geom_line(aes(x=range,y=plot_2,color="green"))+geom_line(aes(x=range,y=plot_3,color="blue"))+ylab("Density")
+lp<-ggplot()+xlab("x")+geom_line(aes(x=range,y=plot_1,color="red",linetype='solid'))+geom_line(aes(x=range,y=plot_2,color="green",linetype='dashed'))+geom_line(aes(x=range,y=plot_3,color="blue",linetype='longdash'))+ylab("Density")
+
+lp + scale_colour_manual(values=c("red","green","blue"),
+                       name="Variance",
+                       labels=c("1","2","3"))
 ```
 
