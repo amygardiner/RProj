@@ -198,6 +198,13 @@ lambda<-1/2
 map_dbl(.x=seq(-1,4),.f=~my_cdf_exp(x=.x,lambda=lambda))
 ```
 
+Confirm that my function is equal to the inbuilt function:
 
+```{r}
+test_inputs<-seq(-1,10,0.1)
+my_cdf_output<-map_dbl(.x=test_inputs,.f=~my_cdf_exp(x=.x,lambda=lambda))
+inbuilt_cdf_output<-map_dbl(.x=test_inputs,.f=~pexp(q=.x,rate=lambda))
 
+all.equal(my_cdf_output,inbuilt_cdf_output)
+```
 
