@@ -177,5 +177,27 @@ fill<-c("Gaussian pdf"="white", "Binomial pmf"="white")
 ggplot()+labs(x="x",y="Probability")+theme_bw()+geom_line(data=norm_df, aes(x,y=pdf,color="Gaussian pdf"),size=2)+geom_col(data=binom_df,aes(x=x,y=pmf,color="Binomial pmf",fill="Binomial pmf"))+scale_color_manual(name="",values=colors)+scale_fill_manual(name="",values=fill)+xlim(c(20,50))
 ```
 
+## Exponential distribution
+
+Population mean of exponential random variable X with parameter $\lambda$ is 1/$\lambda$ \
+The variance is 1/$\lambda$^2
+
+Cumulative distribution function is 1-exp(-$\lambda$ *x) for x >=0, 0 otherwise \
+
+The quantile function of X is -$\infty$ if p=0, -(ln(1-p))/$\lambda$ for p>0
+
+```{r}
+my_cdf_exp<-function(x,lambda){
+  if(x>=0){
+    return(1-exp(-(lambda*x)))
+  }else(
+  return(0))
+}
+
+lambda<-1/2
+map_dbl(.x=seq(-1,4),.f=~my_cdf_exp(x=.x,lambda=lambda))
+```
+
+
 
 
