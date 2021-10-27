@@ -76,3 +76,18 @@ ggplot()+xlab("Value of Beta")+geom_line(aes(x=range,y=average_vector))+ylab("Sa
   
 ```
 
+## Gaussian Distribution
+
+For a Gaussian with mean $\mu$ and standard deviation $\sigma$ > 0
+the probability density function is:
+
+f~$\mu$,$\sigma$~(x) := $\frac{1}{ \sigma sqrt2\pi}$ * exp(-1/2*((x-$ \mu $)/$ \sigma $))^2)
+
+```{r}
+range<-seq(-4,6,0.01)
+plot_1<-dnorm(range,mean=1,sd=1,log=FALSE)
+plot_2<-dnorm(range,mean=1,sd=2,log=FALSE)
+plot_3<-dnorm(range,mean=1,sd=3,log=FALSE)
+ggplot()+xlab("x")+geom_line(aes(x=range,y=plot_1,color="red"))+geom_line(aes(x=range,y=plot_2,color="green"))+geom_line(aes(x=range,y=plot_3,color="blue"))+ylab("Density")
+```
+
