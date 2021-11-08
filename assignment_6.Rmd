@@ -37,7 +37,7 @@ n<-length(RedTailedDf)
 mu_mle<-mean(Tail,na.rm=1)
 var_mle<-var(Tail,na.rm=1)
 
-tails<-seq(100,300,var_mle*0.001)
+tails<-seq(mu_mle-3*sqrt(var_mle),mu_mle+3*sqrt(var_mle),sqrt(var_mle)*0.001)
 colors<-c("MLE density"="red","Kernel density"="blue")
 ggplot()+geom_line(data=data.frame(Tail=tails,Density=dnorm(tails,mean=mu_mle,sd=sqrt(var_mle))), aes(x=Tail,y=Density,color="MLE density")) + geom_density(data=tibble(Tail),aes(x=Tail,color="Kernel density"))+labs(y="Tail length (mm)",color="Estimator")+theme_bw()+scale_color_manual(values=colors)
 ```
