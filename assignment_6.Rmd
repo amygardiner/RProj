@@ -1,0 +1,45 @@
+---
+title: "Assignment 6"
+author: "Amy Gardiner"
+date: "08/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr) 
+library(ggplot2)
+library(tidyverse)
+library(Stat2Data)
+data("Hawks")
+```
+
+## A Gaussian model for red tailed hawks
+
+```{r}
+Weight<-Hawks%>%
+  filter(Species=="RT")%>%
+  pull(Weight)
+Tail<-Hawks%>%
+  filter(Species=="RT")%>%
+  pull(Tail)
+Wing<-Hawks%>%
+  filter(Species=="RT")%>%
+  pull(Wing)
+RedTailedDf<-data.frame(Weight,Tail,Wing)
+head(RedTailedDf,5)
+```
+
+Applying the maximum likelihood method to compute estimates for the mean and variance:
+
+```{r}
+n<-length(RedTailedDf)
+mu_mle<-mean(Tail,na.rm=1)
+var_mle<-var(Tail,na.rm=1)
+
+tails<-seq(100,300,var_mle*0.001)
+colors<-c("MLE density"="red","Kernel density"="blue")
+ggplot()+geom_line(data=data.frame(Tail=tails,Density=dnorm(tails,mean=mu_mle,sd=sqrt(var_mle))), aes(x=Tail,y=Density,color="MLE density")) + geom_density(data=tibble(Tail),aes(x=Tail,color="Kernel density"))+labs(y="Tail length (mm)",color="Estimator")+theme_bw()+scale_color_manual(values=colors)
+```
+
+
