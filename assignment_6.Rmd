@@ -42,4 +42,27 @@ colors<-c("MLE density"="red","Kernel density"="blue")
 ggplot()+geom_line(data=data.frame(Tail=tails,Density=dnorm(tails,mean=mu_mle,sd=sqrt(var_mle))), aes(x=Tail,y=Density,color="MLE density")) + geom_density(data=tibble(Tail),aes(x=Tail,color="Kernel density"))+labs(y="Tail length (mm)",color="Estimator")+theme_bw()+scale_color_manual(values=colors)
 ```
 
+## Location estimators with Gaussian 
+
+```{r}
+set.seed(0)
+num_trials_per_sample_size<-100
+min_sample_size<-5
+max_sample_size<-1000
+sample_size_inc<-5
+mu_0<-1
+sigma_0<-3
+
+simulation_df<-crossing(trial=seq(num_trials_per_sample_size),sample_size=seq(min_sample_size,max_sample_size,sample_size_inc))%>%
+  mutate(simulation=pmap(.l=list(trial,sample_size),.f=~rnorm(.y,mean=mu_0,sd=sigma_0)))%>%
+  mutate(sample_md=map_dbl(.x=simulation,.f=median),sample_mean=map_dbl(.x=simulation,.f=mean))%>%
+  group_by(sample_size)%>%
+  summarise(msq_error_md=mean((sample_md-mu_0)^2),msq_error_mean=mean((sample_mean-mu_0)^2))
+
+samples<-seq(mu_0-3*sigma_0,mu_0+3*sigma_0,sigma_0*0.001)
+colors<-c("Mean"="red","Median"="blue")
+
+ggplot(data=simulation_df)+labs(x="Sample size",y="Mean square error",color="Estimator")+geom_line(aes(x=sample_size,y=msq_error_md,color="Median"))+geom_line(aes(x=sample_size,y=msq_error_mean,color="Mean"))+theme_bw()+scale_color_manual(values=colors)
+```
+
 
