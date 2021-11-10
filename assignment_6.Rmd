@@ -65,4 +65,33 @@ colors<-c("Mean"="red","Median"="blue")
 ggplot(data=simulation_df)+labs(x="Sample size",y="Mean square error",color="Estimator")+geom_line(aes(x=sample_size,y=msq_error_md,color="Median"))+geom_line(aes(x=sample_size,y=msq_error_mean,color="Mean"))+theme_bw()+scale_color_manual(values=colors)
 ```
 
+## Maximum likelihood estimation with the Poisson distribution
+
+```{r}
+set.seed(0)
+num_trials_per_sample_size<-100
+min_sample_size<-5
+max_sample_size<-1000
+sample_size_inc<-5
+lambda_0<-0.5
+
+simulation_poisson_df<-crossing(trial=seq(num_trials_per_sample_size),sample_size=seq(min_sample_size,max_sample_size,sample_size_inc))%>%
+  mutate(simulation=pmap(.l=list(trial,sample_size),.f=~rpois(.y,lambda=lambda_0)))%>%
+  mutate(sample_mean=map_dbl(.x=simulation,.f=mean))%>%
+  group_by(sample_size)%>%
+  summarise(msq_error=mean((sample_mean-lambda_0)^2))
+
+ggplot(data=simulation_poisson_df)+labs(x="Sample size",y="Mean square error",color="Estimator")+geom_line(aes(x=sample_size,y=msq_error))+theme_bw()+scale_color_manual(values=colors)
+```
+
+## The Ladislaus Josephovich Bortkiewicz Dataset
+
+```{r}
+data<-read.csv('horsedata.csv')
+head(data,5)
+data %>%
+  group_by(fatalities) %>%
+  mutate(sample_mean=map_dbl(fatalities,.f=mean))
+```
+
 
