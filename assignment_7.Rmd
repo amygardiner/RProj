@@ -1,0 +1,54 @@
+---
+title: "Assignment 7"
+author: "Amy Gardiner"
+date: "18/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+library(Stat2Data)
+```
+
+Importing and filtering for the weights of the red-tailed hawks
+```{r}
+data("Hawks")
+Hawks<-Hawks%>%
+  filter(Species=="RT")
+RT_Weights<-Hawks%>%
+  pull(Weight)
+
+RT_Weights<-RT_Weights[!is.na(RT_Weights)]
+
+```
+
+Student's t method with 99%-level confidence intervals:
+```{r}
+alpha<-0.01
+sample_size<-length(RT_Weights)
+sample_mean<-mean(RT_Weights)
+sample_sd<-sd(RT_Weights)
+t<-qt(1-alpha/2,df=sample_size-1) #df here is degrees of freedom
+confidence_interval_l<-sample_mean-t*sample_sd/sqrt(sample_size)
+confidence_interval_u<-sample_mean+t*sample_sd/sqrt(sample_size)
+confidence_interval<-c(confidence_interval_l,confidence_interval_u)
+confidence_interval
+```
+
+Comparing assumptions of this statistical test (Gaussian) with a density and quantile-quantile plot:
+```{r}
+tibble(RT_Weights)%>%ggplot(aes(x=RT_Weights))+geom_density()+theme_bw()+labs(x="Weight",y="Density")
+
+tibble(RT_Weights)%>%ggplot(aes(sample=RT_Weights))+stat_qq()+stat_qq_line(color="blue")+theme_bw()
+```
+
+
+
+
+
+
+
+
