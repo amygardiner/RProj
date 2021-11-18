@@ -11,7 +11,10 @@ library(dplyr)
 library(ggplot2)
 library(tidyverse)
 library(Stat2Data)
+library(palmerpenguins)
 ```
+
+## 1. Student's t-confidence intervals
 
 Importing and filtering for the weights of the red-tailed hawks
 ```{r}
@@ -45,10 +48,38 @@ tibble(RT_Weights)%>%ggplot(aes(x=RT_Weights))+geom_density()+theme_bw()+labs(x=
 tibble(RT_Weights)%>%ggplot(aes(sample=RT_Weights))+stat_qq()+stat_qq_line(color="blue")+theme_bw()
 ```
 
+## 2. One sample t-test
 
+```{r}
+data("penguins")
+head(penguins)
 
+penguins<-penguins%>%
+  filter(species=="Adelie")
+bill_adelie<-penguins%>%
+  pull(bill_length_mm)
 
+bill_adelie<-bill_adelie[!is.na(bill_adelie)]
 
+t.test(x=bill_adelie,mu=40,conf.level=0.99)
+```
 
+## 3. Implementing a one-sample t-test
+
+```{r}
+my_t_test<-function(vect,mean){
+  sample_size<-length(vect)
+  sample_mean<-mean(vect)
+  sample_sd<-sd(vect)
+  test_statistic<-(sample_mean-mean)/(sample_sd/sqrt(sample_size))
+  p_value<-2*(1-pt(abs(test_statistic),df=sample_size-1))
+  results<-c(test_statistic,p_value)
+  results
+}
+
+my_t_test(bill_adelie,40)
+```
+
+This implementation of the previous example confirms the validity of my function
 
 
