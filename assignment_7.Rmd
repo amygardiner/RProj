@@ -82,4 +82,22 @@ my_t_test(bill_adelie,40)
 
 This implementation of the previous example confirms the validity of my function
 
+## The paired t-test
+
+```{r}
+library(PairedData)
+data("Barley")
+head(Barley)
+Glabron<-pull(Barley, Glabron)
+Velvet<-pull(Barley, Velvet)
+
+t.test(Glabron, Velvet, paired= TRUE,conf.level=0.99)
+
+diffs<-c(Glabron-Velvet)
+y_bar<-mean(diffs)
+s<-sd(diffs)
+effect_size<-y_bar/s
+effect_size
+```
+
 
