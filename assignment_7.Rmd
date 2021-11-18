@@ -82,7 +82,7 @@ my_t_test(bill_adelie,40)
 
 This implementation of the previous example confirms the validity of my function
 
-## The paired t-test
+## 4. The paired t-test
 
 ```{r}
 library(PairedData)
@@ -99,5 +99,56 @@ s<-sd(diffs)
 effect_size<-y_bar/s
 effect_size
 ```
+
+This effect size shows a large effect
+
+## 5. Investigating coverage for student's t intervals
+
+Code is essentially what i've written earlier:
+
+```{r}
+student_t_confidence_interval<-function(sample,confidence_level){
+  sample<-sample[!is.na(sample)]
+  n<-length(sample)
+  mu_est<-mean(sample)
+  sig_est<-sd(sample)
+  alpha=1-confidence_level
+  t<-qt(1-alpha/2,df=n-1)
+  l=mu_est-(t/sqrt(n))*sig_est
+  u=mu_est+(t/sqrt(n))*sig_est
+  
+  return(c(l,u))
+}
+```
+
+Simulation for coverage property:
+
+```{r}
+num_trials<-100000
+sample_size<-30
+mu_0<-1
+sigma_0<-3
+alpha<-0.05
+
+set.seed(0)
+
+single_alpha_coverage_simulation_df<-data.frame(trial=seq(num_trials))%>%
+  mutate(sample=map(.x=trial,.f=~rnorm(n=sample_size,mean=mu_0,sd=sigma_0)))%>%
+  # generate random Gaussian samples
+  mutate(ci_interval=map(.x=sample,.f=~student_t_confidence_interval(.x,1-alpha)))%>%
+  # generate confidence intervals
+  mutate(cover=map_lgl(.x=ci_interval,.f=~((min(.x)<=mu_0)&(max(.x)>=mu_0))))%>%
+  # check if interval covers mu_0
+  mutate(ci_length=map_dbl(.x=ci_interval,.f=~(max(.x)-min(.x))))
+  # compute interval length
+
+single_alpha_coverage_simulation_df %>%
+  pull(cover) %>%
+  mean() # estimate of coverage probability
+```
+
+
+
+
 
 
