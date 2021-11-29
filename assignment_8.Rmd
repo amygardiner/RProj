@@ -21,7 +21,12 @@ peng_AC<-penguins%>%
   drop_na(species,body_mass_g)%>%
   filter(species!="Gentoo")
 
-t_test_function<-function(data,group_col,val_col){
+t_test_function<-function(data,group_col,val_col,var_equal=TRUE){
+  
+  names(data)[names(data)==group_col] <- "group_col"
+  names(data)[names(data)==val_col] <- "val_col"
+  # very important here for tidyverse functionality to work
+  
   mean_0<-data%>%
     filter(group_col=="Adelie")%>%
     pull(val_col)%>%
@@ -56,7 +61,7 @@ t_test_function<-function(data,group_col,val_col){
   
   p_value<-2*(1-pt(abs(t_statistic),df=n_0+n_1-2))
   
-  return(c(t_statistic,p_value))
+  return(data.frame(t_stat=t_statistic,dof=n_0+n_1-2,p_val=p_value))
 }
 
 t_test_function(data=peng_AC,val_col="body_mass_g",group_col="species")
