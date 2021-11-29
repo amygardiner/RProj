@@ -1,0 +1,84 @@
+---
+title: "Assignment 9"
+author: "Amy Gardiner"
+date: "29/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(Stat2Data)
+library(tidyverse)
+```
+
+
+```{r}
+data("Hawks")
+
+hawks_total<-Hawks%>%
+  select(Weight,Wing,Hallux,Tail,Species)%>%
+  filter(Species!="RT")%>%
+  drop_na()%>%
+  mutate(Species=as.numeric(Species=="SS"))
+  
+head(hawks_total)
+
+num_total<-hawks_total%>%
+  nrow()
+
+num_train<-floor(num_total*0.6)
+num_test<-num_total-num_train
+
+```
+
+The number of rows in the train and test data are:
+```{r,echo=FALSE}
+c(num_train,num_test)
+```
+
+```{r}
+set.seed(1)
+test_inds<-sample(seq(num_total),num_test)
+train_inds<-setdiff(seq(num_total),test_inds)
+
+hawks_train<-hawks_total%>%
+  filter(row_number() %in% train_inds)
+
+hawks_test<-hawks_total%>%
+  filter(row_number() %in% test_inds)
+
+hawks_train_x<-hawks_train%>%
+  select(-Species)
+
+hawks_train_y<-hawks_train%>%
+  pull(Species)
+
+hawks_test_x<-hawks_test%>%
+  select(-Species)
+
+hawks_test_y<-hawks_test%>%
+  pull(Species)
+
+lda_model <- MASS::lda(Species ~ ., data=hawks_train)
+
+lda_train_predicted_y<-predict(lda_model,hawks_train_x)$class%>%
+  as.character()%>%
+  as.numeric()
+
+lda_train_error<-mean(abs(lda_train_predicted_y-hawks_train_y))
+
+lda_test_predicted_y<-predict(lda_model,hawks_test_x)$class%>%
+  as.character()%>%
+  as.numeric()
+
+lda_test_error<-mean(abs(lda_test_predicted_y-hawks_test_y))
+
+c(lda_train_error,lda_test_error)
+```
+
+
+
+
+
+
