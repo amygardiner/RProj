@@ -37,6 +37,8 @@ The number of rows in the train and test data are:
 c(num_train,num_test)
 ```
 
+## Linear discriminant analysis method of classification
+
 ```{r}
 set.seed(1)
 test_inds<-sample(seq(num_total),num_test)
@@ -78,7 +80,23 @@ c(lda_train_error,lda_test_error)
 ```
 
 
+## Logistic regression method for classification
 
+```{r}
+library(glmnet)
+
+logistic_model<-glmnet(x=hawks_train_x%>%as.matrix(),y=hawks_train_y,family="binomial",alpha=0,lambda=0)
+
+logistic_train_predicted_y<-predict(logistic_model,hawks_train_x%>%as.matrix(),type="class")%>%as.integer()
+
+logistic_train_error<-mean(abs(logistic_train_predicted_y-hawks_train_y))
+
+logistic_test_predicted_y<-predict(logistic_model,hawks_test_x%>%as.matrix(),type="class")%>%as.integer()
+
+logistic_test_error<-mean(abs(logistic_test_predicted_y-hawks_test_y))
+
+c(logistic_train_error,logistic_test_error)
+```
 
 
 
